@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/ten_dp"
+    android:paddingRight="@dimen/ten_dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/ten_dp">
+
+        <com.mikhaellopez.circularimageview.CircularImageView
+            android:id="@+id/profile_photo"
+            android:layout_width="@dimen/seventy_dp"
+            android:layout_height="@dimen/seventy_dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:padding="@dimen/one_dp"
+            app:civ_border_color="@color/colorPrimary"
+            app:civ_border_width="2.5dp" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/seventy_dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/profile_photo"
+            android:layout_toRightOf="@+id/profile_photo"
+            android:background="@drawable/bubble"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/ten_dp">
+
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/ten_dp"
+                android:fontFamily="sans-serif-light"
+                android:padding="@dimen/ten_dp"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="24sp" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>
+
+
+
+
+

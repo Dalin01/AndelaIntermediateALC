@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">GitHub Java Dev</string>
+    <string name="action_settings">Settings</string>
+    <string name="saved_dev">Saved Developers</string>
+    <string name="search">Search</string>
+    <string name="connecting">Loading</string>
+    <string name="no_internet">No Internet. Swipe to refresh</string>
+    <string name="no_developers">No developers found</string>
+    <string name="bio"><u>Bio</u></string>
+    <string name="other"><u>Others</u></string>
+    <string name="retry">Click <u>here</u> to retry</string>
+    <string name="title_activity_profile">ProfileActivity</string>
+    <string name="java_dev">Java Developers</string>
+    <string name="rep">Reposition</string>
+    <string name="follow">Followers</string>
+    <string name="followers">Followers</string>
+    <string name="comp">Company:</string>
+    <string name="status">Status:</string>
+    <string name="undecided">Undecided</string>
+    <string name="hireable">Hireable</string>
+    <string name="not_hirable">Not hireable</string>
+    <string name="not_provided">None provided</string>
+    <string name="cancel">Cancel</string>
+    <string name="dialog_search">Enter a valid location and click search.</string>
+    <string name="location">Enter Location</string>
+</resources>
