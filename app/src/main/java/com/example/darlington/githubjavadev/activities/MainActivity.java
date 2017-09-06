@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
     private int visibleItemCount;
     private int totalItemCount;
     private int pastVisibleItems;
-    private int pastTotal = 0;
     private int pageCount = 1;
     private RecyclerViewAdapter mAdapter;
     LinearLayout no_internet_connection;
@@ -89,27 +88,19 @@ public class MainActivity extends AppCompatActivity {
                 {
                     //Get the integer values of the no of items in the screen, the total item available and the
                     //items already seen and save them in the corresponding variables.
-                    visibleItemCount = mLayoutManager.getChildCount();
+                    visibleItemCount = recyclerView.getChildCount();
                     totalItemCount = mLayoutManager.getItemCount();
                     pastVisibleItems = mLayoutManager.findFirstVisibleItemPosition();
 
-                    //If loading is true as you scroll down, and you havn't gotten to the end
-                    //of the list, assign loading to false.
-                    if (loading && (totalItemCount > pastTotal)) {
+                    //If loading is true and the other conditions are met the boolean value in loading
+                    //should be changed to false. Also, if the value in  pageCount is less than 8 fetch data and
+                    //increment the value in pageCount
+                    if (loading && (visibleItemCount + pastVisibleItems) >= totalItemCount) {
                         loading = false;
-                        pastTotal = totalItemCount;
-                    }
-
-                    //if loading is false and you are at the end of the list increment pageCount
-                    //by 1 and then check if you are not at the last page using the value in pageCount
-                    //if it is true, then pass the current page number to the Url and fetch the data from the
-                    //internet and then update the info displayed in the RV if successful.
-                    if (!loading && (visibleItemCount + pastVisibleItems) >= totalItemCount) {
-                        pageCount = pageCount + 1;
                         if (pageCount < 8) {
+                            pageCount = pageCount + 1;
                             reload_progress_bar.setVisibility(View.VISIBLE);//show the progress bar for reloading.
                             fetchData();
-                            loading = true;
                         } else {
                             Toast.makeText(getApplicationContext(), "You have gotten to the end of the list", Toast.LENGTH_LONG).show();
                             loading = true;
@@ -136,16 +127,20 @@ public class MainActivity extends AppCompatActivity {
                     progress = (LinearLayout) findViewById(R.id.progress_bar);
                     progress.setVisibility(View.GONE);
                     reload_progress_bar.setVisibility(View.GONE);
-                    List<Item> items = response.body().getItems(); //Save the response in a list of items
-                    myDevelopersProfiles.addAll(items); //Add that list to our defined list
-                    //Make a check of the page number. If it is the first page create an instance of the adapter
-                    //and set it before notifying it for changes else just notify the already created adapter for changes
-                    if (pageCount == 1) {
-                        mAdapter = new RecyclerViewAdapter(getApplicationContext(), myDevelopersProfiles);
-                        recyclerView.setAdapter(mAdapter);
-                        mAdapter.notifyDataSetChanged();
-                    } else {
-                        mAdapter.notifyDataSetChanged();
+                    if (response != null) {
+                        List<Item> items = response.body().getItems(); //Save the response in a list of items
+
+                        myDevelopersProfiles.addAll(items); //Add that list to our defined list
+                        //Make a check of the page number. If it is the first page create an instance of the adapter
+                        //and set it before notifying it for changes else just notify the already created adapter for changes
+                        if (pageCount == 1) {
+                            mAdapter = new RecyclerViewAdapter(getApplicationContext(), myDevelopersProfiles);
+                            recyclerView.setAdapter(mAdapter);
+                            mAdapter.notifyDataSetChanged();
+                        } else {
+                            mAdapter.notifyDataSetChanged();
+                        }
+                        loading = true;
                     }
                 }
 
@@ -175,20 +170,31 @@ public class MainActivity extends AppCompatActivity {
             call.enqueue(new Callback<ItemResponse>() {
                 @Override
                 public void onResponse(Call<ItemResponse> call, Response<ItemResponse> response) {
-                    List<Item> items = response.body().getItems();
-                    myDevelopersProfiles.clear();
-                    myDevelopersProfiles.addAll(items);
-                    mAdapter = new RecyclerViewAdapter(getApplicationContext(), myDevelopersProfiles);
-                    recyclerView.setAdapter(mAdapter);
-                    mAdapter.notifyDataSetChanged();
-                    if (swipeRefreshLayout.isRefreshing()) {
-                        swipeRefreshLayout.setRefreshing(false);
+                    if(response != null){
+                        List<Item> items = response.body().getItems();
+                        myDevelopersProfiles.clear();
+                        myDevelopersProfiles.addAll(items);
+                        if(mAdapter != null){
+                            mAdapter.notifyDataSetChanged();
+                        }
+                        else{
+                            no_internet_connection.setVisibility(View.GONE);
+                            mAdapter = new RecyclerViewAdapter(getApplicationContext(), myDevelopersProfiles);
+                            recyclerView.setAdapter(mAdapter);
+                            mAdapter.notifyDataSetChanged();
+                        }
+                        if (swipeRefreshLayout.isRefreshing()) {
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ItemResponse> call, Throwable t) {
                     Toast.makeText(MainActivity.this, "Failed to Refresh", Toast.LENGTH_SHORT).show();
+                    if (swipeRefreshLayout.isRefreshing()) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
                 }
             });
         } catch (Exception e) {
