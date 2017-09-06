@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<ItemResponse> call, Throwable t) {
-                    Toast.makeText(MainActivity.this, "Failed to Refresh..", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Failed to Refresh.", Toast.LENGTH_SHORT).show();
                     if (swipeRefreshLayout.isRefreshing()) {
                         swipeRefreshLayout.setRefreshing(false);
                     }
